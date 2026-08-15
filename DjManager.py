@@ -16,6 +16,14 @@ class DjManager:
         self.__voice_clients__ = {} # List of voice channels DJ has joined in a specific server
         self.__register_commands__()
         self.__agent__.run(self.__token__)
+        self.__cmd_list__ = ("Usage: `!<command> <option>`\n"
+                             "**!join** - Joins the current voice channel you are in\n"
+                             "**!play** *<song name>* - Youtube searches then plays the name of the song\n"
+                             "**!skip** - Stop playing the current song\n"
+                             "**!pause** - Pauses the current song\n"
+                             "**!resume** - Resumes the current song\n"
+                             "**!leave** - Disconnects the DJ\n"
+                            )
 
     def __register_commands__(self):
         @self.__agent__.command(name='join')
@@ -106,5 +114,12 @@ class DjManager:
                     await ctx.send("Oak: 'This isn't the time to use that!'")
             else:
                 await ctx.send("Oak's words echoed... 'There's a time and place for everything but not now!'")
+        
+        @self.__agent__.event
+        async def on_command_error(ctx, error):
+            if isinstance(error, commands.CommandNotFound):
+                await ctx.send("Unkown command. Please refer to the following list of commands for proper usage.")
+                await ctx.send(self.__cmd_list__)
+
     
             
