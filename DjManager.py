@@ -42,7 +42,7 @@ class DjManager:
                 await ctx.send("Join a voice channel to summon me.")
         
         @self.__agent__.command(name='play')
-        async def play(ctx):
+        async def play(ctx, *, query: str):
             if ctx.guild.id not in self.__voice_clients__:
                 await join(ctx)
 

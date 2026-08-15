@@ -1,6 +1,7 @@
 import DjManager
 import os, sys
 import argparse
+from DjManager import DjManager
 
 def scan(file_path):
     res = ''
@@ -8,7 +9,7 @@ def scan(file_path):
     try:
         file = open(file_path, "r")
         for line in file:
-            res = print(line.strip())
+            res = line.strip()
         file.close()
     except OSError:
         print("Something went wrong.")
