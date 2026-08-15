@@ -4,18 +4,12 @@ from discord.ext import commands
 import asyncio
 import os
 class DjManager:
-    def __init__(self, token):
+    def __init__(self, token, cookie_file_path):
+        # Get parameters
         self.__token__ = token
+        self.__cookiefile__ = cookie_file_path
         
-        # Initialize bot
-        intents = discord.Intents.default()
-        intents.message_content = True
-        intents.voice_states = True
-        self.__agent__ = commands.Bot(command_prefix='!', intents=intents)
-
-        self.__voice_clients__ = {} # List of voice channels DJ has joined in a specific server
-        self.__register_commands__()
-        self.__agent__.run(self.__token__)
+        # Commands list
         self.__cmd_list__ = ("Usage: `!<command> <option>`\n"
                              "**!join** - Joins the current voice channel you are in\n"
                              "**!play** *<song name>* - Youtube searches then plays the name of the song\n"
@@ -24,6 +18,18 @@ class DjManager:
                              "**!resume** - Resumes the current song\n"
                              "**!leave** - Disconnects the DJ\n"
                             )
+        
+        # Configure bot
+        intents = discord.Intents.default()
+        intents.message_content = True
+        intents.voice_states = True
+        self.__agent__ = commands.Bot(command_prefix='!', intents=intents)
+
+        self.__voice_clients__ = {} # List of voice channels DJ has joined in a specific server
+        self.__register_commands__() # Expose command methods to the instance of the bot
+        
+        # Start running
+        self.__agent__.run(self.__token__)
 
     def __register_commands__(self):
         @self.__agent__.command(name='join')
@@ -45,6 +51,7 @@ class DjManager:
             # Options for yt-dlp to extract audio URL
             ydl_opts = {
                 'format': 'bestaudio/best',
+                'cookiefile': self.__cookiefile__,
                 'postprocessors': [{
                     'key': 'FFmpegExtractAudio',
                     'preferredcodec': 'wav', # We convert to wav then pipe to opus
