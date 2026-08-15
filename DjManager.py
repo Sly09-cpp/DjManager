@@ -26,10 +26,18 @@ class DjManager:
         self.__agent__ = commands.Bot(command_prefix='!', intents=intents)
 
         self.__voice_clients__ = {} # List of voice channels DJ has joined in a specific server
-        self.__register_commands__() # Expose command methods to the instance of the bot
+        self.__register_events__() # Expose events to the instance of the bot
+        self.__register_commands__() # Expose command to the instance of the bot
         
         # Start running
         self.__agent__.run(self.__token__)
+
+    def __register_events__(self):
+        @self.__agent__.event
+        async def on_command_error(ctx, error):
+            if isinstance(error, commands.CommandNotFound):
+                await ctx.send(f"Unkown command: {error}. Please refer to the following list of commands for proper usage.")
+                await ctx.send(self.__cmd_list__)
 
     def __register_commands__(self):
         @self.__agent__.command(name='join')
@@ -121,12 +129,6 @@ class DjManager:
                     await ctx.send("Oak: 'This isn't the time to use that!'")
             else:
                 await ctx.send("Oak's words echoed... 'There's a time and place for everything but not now!'")
-        
-        @self.__agent__.event
-        async def on_command_error(ctx, error):
-            if isinstance(error, commands.CommandNotFound):
-                await ctx.send(f"Unkown command: {error}. Please refer to the following list of commands for proper usage.")
-                await ctx.send(self.__cmd_list__)
 
     
             
