@@ -42,7 +42,7 @@ class DjManager:
 
             vc_client = self.__voice_clients__[ctx.guild.id]
 
-            # Options for yt-dlp to extract audio only
+            # Options for yt-dlp to extract audio URL
             ydl_opts = {
                 'format': 'bestaudio/best',
                 'postprocessors': [{
@@ -118,7 +118,7 @@ class DjManager:
         @self.__agent__.event
         async def on_command_error(ctx, error):
             if isinstance(error, commands.CommandNotFound):
-                await ctx.send("Unkown command. Please refer to the following list of commands for proper usage.")
+                await ctx.send(f"Unkown command: {error}. Please refer to the following list of commands for proper usage.")
                 await ctx.send(self.__cmd_list__)
 
     
