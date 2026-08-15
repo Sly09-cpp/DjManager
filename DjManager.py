@@ -59,7 +59,7 @@ class DjManager:
 
                     # Create the audio source
                     # discord.FFmpegPCMAudio handles the conversion to Opus internally
-                    source = discord.FFmpegPCMAudio(url, before_options='-nostats')
+                    source = discord.FFmpegPCMAudio(url, before_options='-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5', options='-bufsize 1024k')
                     
                     # Play the audio
                     if not vc_client.is_playing():
@@ -78,4 +78,33 @@ class DjManager:
                 await ctx.send("Disconnected.")
             else:
                 await ctx.send("I'm not connected.")
+
+        @self.__agent__.command(name='pause')
+        async def pause(ctx):
+            if ctx.guild.id in self.__voice_clients__:
+                vc_client = self.__voice_clients__[ctx.guild.id]
+                if vc_client.is_playing():
+                    vc_client.pause()
+                    await ctx.send("Paused.")
+                elif vc_client.is_paused():
+                    await ctx.send("Song is already paused. Do **!resume** to continue playing or **!skip** to stop playing.")
+                else:
+                    await ctx.send("Oak: 'This isn't the time to use that!'")
+            else:
+                await ctx.send("Oak's words echoed... 'There's a time and place for everything but not now!'")
+        
+        @self.__agent__.command(name='resume')
+        async def resume(ctx):
+            if ctx.guild.id in self.__voice_clients__:
+                vc_client = self.__voice_clients__[ctx.guild.id]
+                if vc_client.is_paused():
+                    vc_client.resume()
+                    await ctx.send("Resumed.")
+                elif vc_client.is_playing():
+                    await ctx.send("Song is already playing. Do **!pause** to pause the song or **!skip** to stop playing.")
+                else:
+                    await ctx.send("Oak: 'This isn't the time to use that!'")
+            else:
+                await ctx.send("Oak's words echoed... 'There's a time and place for everything but not now!'")
+    
             
