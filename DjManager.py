@@ -130,5 +130,20 @@ class DjManager:
             else:
                 await ctx.send("Oak's words echoed... 'There's a time and place for everything but not now!'")
 
+        @self.__agent__.command(name='skip')
+        async def skip(ctx):
+            if ctx.guild.id in self.__voice_clients__:
+                vc_client = self.__voice_clients__[ctx.guild.id]
+                vc_client.stop()
+                await ctx.send("*Song skipped...*")
+            else:
+                await ctx.send("Oak's words echoed... 'There's a time and place for everything but not now!'")
+
+        @self.__agent__.command(name='help')
+        async def help(ctx):
+            await ctx.send(self.__cmd_list__)
+
+        
+
     
             

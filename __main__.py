@@ -40,6 +40,11 @@ def main():
     if args.Cookies_Path:
         cookie_file_path = str(args.Cookies_Path)
 
+    # If token is invalid, nothing works
+    if token == '':
+        print(f"Token is invalid! Token: {token}")
+        return
+        
     # Finally, get instance of DJ manager and run
     manager = DjManager(token, cookie_file_path)
 
