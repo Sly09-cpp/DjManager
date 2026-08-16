@@ -93,6 +93,24 @@ class DjManager:
             except Exception as e:
                 await ctx.send(f"An error occurred: {str(e)}")
 
+        # This one is a little easter-egg for myself, so don't worry about it. You can remove it if you'd like
+        @self.__agent__.command(name='seprendiolafiesta')
+        async def seprendiolafiesta(ctx):
+            if ctx.guild.id not in self.__voice_clients__:
+                await join(ctx)
+
+            vc_client = self.__voice_clients__[ctx.guild.id]
+            source = discord.FFmpegPCMAudio("InstagramReel.wav", before_options='-nostats')
+            
+            # Start the party
+            try:
+                if not vc_client.is_playing():
+                    vc_client.play(source, after=lambda e: print(f'Error: {e}' if e else 'Track finished'))
+                else:
+                    await ctx.send("Pero bueno mucacho calmate")
+            except Exception as e:
+                await ctx.send(f"An error occurred: {str(e)}")
+
         @self.__agent__.command(name='leave')
         async def leave(ctx):
             if ctx.guild.id in self.__voice_clients__:
@@ -139,8 +157,8 @@ class DjManager:
             else:
                 await ctx.send("Oak's words echoed... 'There's a time and place for everything but not now!'")
 
-        @self.__agent__.command(name='help')
-        async def help(ctx):
+        @self.__agent__.command(name='commands')
+        async def commands(ctx):
             await ctx.send(self.__cmd_list__)
 
         
