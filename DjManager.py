@@ -160,8 +160,3 @@ class DjManager:
         @self.__agent__.command(name='commands')
         async def commands(ctx):
             await ctx.send(self.__cmd_list__)
-
-        
-
-    
-            
